@@ -31,7 +31,6 @@ def get_articles_urls(url):
                 art_url = au.get('href')
                 articles_urls_list.append(art_url)
 
-            # time.sleep(randrange(2, 5))
             print(f'Обработал {page}/{pagination_count}')
 
         with open('articles_urls.txt', 'w') as file:
@@ -52,7 +51,7 @@ def get_data(file_path):
         for i, url in enumerate(urls_list[:100]):
             response = session.get(url=url, headers=headers)
             soup = BeautifulSoup(response.text, 'lxml')
-
+            time.sleep(randrange(2, 3))
             article_title = soup.find('div', class_='post-content').find('h1', class_='title').text.strip()
             article_date = soup.find('div', class_='post').find('div', class_='tile-views').text.strip()
             article_img = f"https://hi-tech.news{soup.find('div', class_='post-media-full').find('img').get('src')}"
@@ -64,13 +63,13 @@ def get_data(file_path):
                     'article_title': article_title,
                     'article_date': article_date,
                     'article_img': article_img,
-                    'article_text': article_text
+                    'article_text': article_text,
                 }
             )
             # print(f'{article_title}\n{article_date}\n{article_img}\n{10*"#"}')
             print(f'Обработал {i + 1}/{urls_count}')
 
-    with open('result.json', 'w') as file:
+    with open('result.json', 'w', encoding="utf-8") as file:
         json.dump(result_data, file, indent=4, ensure_ascii=False)
 
 
